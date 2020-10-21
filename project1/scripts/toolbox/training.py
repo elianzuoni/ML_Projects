@@ -15,17 +15,17 @@ from implementations import *
 
 """ Returns the linear regressor function, given its weights """
 def get_linear_regressor(w):
-    return lambda x : np.dot(x.T, w)
+    return lambda tx : np.dot(tx, w)
 
 
 """ Returns the logistic regressor function, given its weights """
 def get_logistic_regressor(w):
-    return lambda x : sigmoid(np.dot(x.T, w))
+    return lambda tx : sigmoid(np.dot(tx, w))
 
 
 """ Returns the classifier, given the regressor and the threshold """
 def get_classifier(regressor, threshold):
-    return lambda x : np.where(regressor(x) < threshold, 0, 1)
+    return lambda tx : np.where(regressor(tx) < threshold, 0, 1)
 
 
 ##### GENERIC IMPLEMENTATION OF TRAINING FUNCTION
