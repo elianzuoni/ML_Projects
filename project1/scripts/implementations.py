@@ -28,7 +28,8 @@ def sigmoid(t):
     return (np.exp(t)/(1+np.exp(t)))
 
 
- """compute the loss for logistic regression: negative log likelihood."""
+"""compute the loss for logistic regression: negative log likelihood. """
+
 def calculate_loss_logistic(y, tx, w):
     loss=0 #initialisation of the loss
     for i in range (len(y)) :
@@ -115,7 +116,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
         tx_sub = tx[n, :]
         
         # Compute the (stochastic approximation of the) gradient evaluated at the current point w
-        grad = compute_gradient[method](y_sub, tx_sub, w)
+        grad = compute_mse_gradient(y_sub, tx_sub, w)
         
         # Update w, and the corresponding loss
         w = w - gamma * grad
@@ -143,12 +144,12 @@ def ridge_regression(y, tx, lambda_):
 
 
 
-''' Logistic regression using gradient descent or SGD : here we use '''
+''' Logistic regression using gradient descent or SGD : here we use GD (uncomment SGD to apply SGD)'''
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     threshold = 1e-8
     w = initial_w
     losses=[]
-    for iter in range(max_iter):
+    for iter in range(max_iters):
         # get loss and update w.
         loss, w = logistic_step_GD(y, tx, w, gamma) #GD
         #loss, w = logistic_step_SGD(y, tx, w, gamma) #SGD
@@ -165,7 +166,7 @@ def reg_logistic_regression(y, tx, lambda_,initial_w, max_iters, gamma):
     threshold = 1e-8
     w = initial_w
     losses=[]
-    for iter in range(max_iter):
+    for iter in range(max_iters):
         # get loss and update w.
         loss, w = logistic_step_GD(y, tx, w, gamma, lambda_) #GD
         #loss, w = logistic_step_SGD(y, tx, w, gamma, lambda_) #SGD
