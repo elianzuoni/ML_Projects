@@ -13,29 +13,27 @@ from implementations import *
 ##### BUILDING BLOCKS
 
 
-""" Returns the linear regressor function, given its weights """
 def get_linear_regressor(w):
+    """ Returns the linear regressor function, given its weights. """
     return lambda tx : np.dot(tx, w)
 
 
-""" Returns the logistic regressor function, given its weights """
 def get_logistic_regressor(w):
+    """ Returns the logistic regressor function, given its weights. """
     return lambda tx : sigmoid(np.dot(tx, w))
 
 
-""" Returns the classifier, given the regressor and the threshold """
 def get_classifier(regressor, threshold):
+    """ Returns the classifier, given the regressor and the threshold. """
     return lambda tx : np.where(regressor(tx) < threshold, 0, 1)
 
 
 ##### GENERIC IMPLEMENTATION OF TRAINING FUNCTION
 
 
-"""
-Learns the model by supplying the tuple "learn_args" to the learning function "learn".
-Returns the model (w, loss) and the corresponding regressor and classifier.
-"""
 def train(learn_args, learn, get_regressor, threshold):
+    """ Learns the model by supplying the tuple "learn_args" to the learning function "learn".
+    Returns the model (w, loss) and the corresponding regressor and classifier. """
     # Learn the model
     w, loss = learn(*learn_args)
     
@@ -47,41 +45,41 @@ def train(learn_args, learn, get_regressor, threshold):
     return w, loss, regressor, classifier
 
 
-##### ACTUAL TRAINING FUNCTIONS: MSE
+##### ACTUAL TRAINING FUNCTIONS: LEAST SQUARES
 
 
-""" Training for L2-regularised MSE with Gradient Descent """
-def train_reg_mse_GD(y, tx, lambda_, initial_w, max_iters, gamma, threshold):
+def train_reg_ls_GD(y, tx, lambda_, initial_w, max_iters, gamma, threshold):
+    """ Training for L2-regularised Least-Squares loss with Gradient Descent """
     learn_args = (y, tx, lambda_, initial_w, max_iters, gamma)
     return train(learn_args, reg_least_squares_GD, get_linear_regressor, threshold)
 
 
-""" Training for L2-regularised MSE with Stochastic Gradient Descent """
-def train_reg_mse_SGD(y, tx, lambda_, initial_w, max_iters, gamma, threshold):
-    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma)
+def train_reg_ls_SGD(y, tx, lambda_, initial_w, max_iters, batch_size, gamma, threshold):
+    """ Training for L2-regularised Least-Squares loss with Stochastic Gradient Descent """
+    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma, batch_size)
     return train(learn_args, reg_least_squares_SGD, get_linear_regressor, threshold)
 
 
-""" Training for L2-regularised MSE with Normal Equations """
-def train_reg_mse_NE(y, tx, lambda_, threshold):
+def train_reg_ls_NE(y, tx, lambda_, threshold):
+    """ Training for L2-regularised Least-Squares loss with Normal Equations """
     learn_args = (y, tx, lambda_)
     return train(learn_args, ridge_regression, get_linear_regressor, threshold)
 
 
-""" Training for unregularised MSE with Gradient Descent """
-def train_unreg_mse_GD(y, tx, initial_w, max_iters, gamma, threshold):
+def train_unreg_ls_GD(y, tx, initial_w, max_iters, gamma, threshold):
+    """ Training for unregularised Least-Squares loss with Gradient Descent """
     learn_args = (y, tx, initial_w, max_iters, gamma)
     return train(learn_args, least_squares_GD, get_linear_regressor, threshold)
 
 
-""" Training for unregularised MSE with Stochastic Gradient Descent """
-def train_unreg_mse_SGD(y, tx, initial_w, max_iters, gamma, threshold):
-    learn_args = (y, tx, initial_w, max_iters, gamma)
+def train_unreg_ls_SGD(y, tx, initial_w, max_iters, batch_size, gamma, threshold):
+    """ Training for unregularised Least-Squares loss with Stochastic Gradient Descent """
+    learn_args = (y, tx, initial_w, max_iters, gamma, batch_size)
     return train(learn_args, least_squares_SGD, get_linear_regressor, threshold)
 
 
-""" Training for unregularised MSE with Normal Equations """
-def train_unreg_mse_NE(y, tx, threshold):
+def train_unreg_ls_NE(y, tx, threshold):
+    """ Training for unregularised Least-Squares loss with Normal Equations """
     learn_args = (y, tx)
     return train(learn_args, least_squares, get_linear_regressor, threshold)
 
@@ -89,25 +87,25 @@ def train_unreg_mse_NE(y, tx, threshold):
 ##### ACTUAL TRAINING FUNCTIONS: LOGISTIC
 
 
-""" Training for L2-regularised logistic loss with Gradient Descent """
 def train_reg_log_GD(y, tx, lambda_, initial_w, max_iters, gamma, threshold):
+    """ Training for L2-regularised Logistic loss with Gradient Descent """
     learn_args = (y, tx, lambda_, initial_w, max_iters, gamma)
     return train(learn_args, reg_logistic_regression, get_linear_regressor, threshold)
 
 
-""" Training for L2-regularised logistic loss with Stochastic Gradient Descent """
-def train_reg_log_SGD(y, tx, lambda_, initial_w, max_iters, gamma, threshold):
-    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma)
+def train_reg_log_SGD(y, tx, lambda_, initial_w, max_iters, batch_size, gamma, threshold):
+    """ Training for L2-regularised Logistic loss with Stochastic Gradient Descent """
+    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma, batch_size)
     return train(learn_args, reg_logistic_regression_SGD, get_linear_regressor, threshold)
 
 
-""" Training for unregularised logistic loss with Gradient Descent """
 def train_unreg_log_GD(y, tx, initial_w, max_iters, gamma, threshold):
+    """ Training for unregularised Logistic loss with Gradient Descent """
     learn_args = (y, tx, initial_w, max_iters, gamma)
     return train(learn_args, logistic_regression, get_linear_regressor, threshold)
 
 
-""" Training for unregularised logistic loss with Stochastic Gradient Descent """
-def train_unreg_log_SGD(y, tx, initial_w, max_iters, gamma, threshold):
-    learn_args = (y, tx, initial_w, max_iters, gamma)
+def train_unreg_log_SGD(y, tx, initial_w, max_iters, batch_size, gamma, threshold):
+    """ Training for unregularised Logistic loss with Stochastic Gradient Descent """
+    learn_args = (y, tx, initial_w, max_iters, gamma, batch_size)
     return train(learn_args, logistic_regression_SGD, get_linear_regressor, threshold)

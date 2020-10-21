@@ -6,9 +6,8 @@ This file contains functions useful to manipulate data.
 import numpy as np
 
 
-
-"""" Standardise the original data set. """
 def standardise(x):
+    """" Standardise the original data set. """
     mean_x = np.mean(x, axis=0)
     x = x - mean_x
     std_x = np.std(x, axis=0)
@@ -16,8 +15,8 @@ def standardise(x):
     return x, mean_x, std_x
 
 
-""" Splits the data between training and testing. """
 def split_data(y, tx, train_ratio):
+    """ Splits the data between training and testing. """
     N = len(y)
     indices = np.random.permutation(N)
     
