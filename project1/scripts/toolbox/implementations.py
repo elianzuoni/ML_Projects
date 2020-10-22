@@ -34,7 +34,7 @@ def sigmoid(t):
     return np.exp(t) / (1+np.exp(t))
 
 
-def compute_reg_logistic_loss(y, tx, w, lambda_=0):
+def compute_reg_logistic_loss(y, tx, w, lambda_):
     """ Compute the value of the L2-regularised logistic loss function (negative log-likelihood). """
     # Vectorised computation
     z = np.dot(tx, w)
@@ -43,16 +43,18 @@ def compute_reg_logistic_loss(y, tx, w, lambda_=0):
     # Regularise, if necessary
     if lambda_ > 0:
         loss += lambda_ * np.dot(w.T, w)
+    #print("LogLoss. lambda_ =", lambda_, ", loss =", loss, ", w =", w)
     return loss
 
 
-def compute_reg_logistic_gradient(y, tx, w, lambda_=0):
+def compute_reg_logistic_gradient(y, tx, w, lambda_):
     """ Compute the gradient of the L2-regularised logistic loss function, evaluated at point w. """
     diff = sigmoid(np.dot(tx, w)) - y
     
     grad = np.dot(tx.T, diff)
     if lambda_ > 0:
         grad += lambda_ * 2 * w
+    #print("LogGrad. lambda_ =", lambda_, ", grad =", grad, ", w =", w)
     return grad
 
 

@@ -7,7 +7,7 @@ mapping datapoints to continuous outputs, and classifier is the function mapping
 
 # -*- coding: utf-8 -*-
 import numpy as np
-from implementations import *
+from .implementations import *
 
 
 ##### BUILDING BLOCKS

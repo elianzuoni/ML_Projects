@@ -16,6 +16,7 @@ def compute_mse(a, b):
 
 def compute_nhd(a, b):
     """ Returns the normalised Hamming distance between a and b (binary values). """
+    #print(a, "\n", b, "\n\n")
     return (1 / len(a)) * np.sum(np.where(a != b, 1, 0))
 
 
@@ -44,18 +45,17 @@ def assess_classifier_nhd(y_test, tx_test, classifier):
 
 
 def cross_validation(y, tx, trainer, hyper_params, threshold, k_fold, to_assess="regressor"):
-    """ Returns a score (the lower, the better) for this particular choice of "tx" (i.e. the way to
+    """ Returns the average of the test loss and the train loss for this particular choice of "tx" (i.e. the way to
     pre-process data, like feature expansion) and "hyper_params" (extra parameters to the "trainer" function).
-    Splits the data in "k_fold" equal parts, using each one once for testing, and "k_fold-1" times for training.
-    The returned score is the average of the test losses. """
+    Splits the data in "k_fold" equal parts, using each one once for testing, and "k_fold-1" times for training. """
     # Build index blocks
     N = y.shape[0]
     block_size = int(N / k_fold)
     indices = np.random.permutation(N)
     index_blocks = [indices[k*block_size: (k+1)*block_size] for k in range(k_fold)]
     
-    # Score initialisation
-    score = 0
+    avg_test_loss = 0
+    avg_train_loss = 0
     for k in range(k_fold):
         # Get k-th block for testing, and remaining for training
         tx_test = tx[index_blocks[k], :]
@@ -82,7 +82,8 @@ def cross_validation(y, tx, trainer, hyper_params, threshold, k_fold, to_assess=
             test_loss = assess_classifier_nhd(y_test, tx_test, classifier)
         
         # Update score
-        score += test_loss
+        avg_test_loss += test_loss
+        avg_train_loss += train_loss
     
-    # Return average test loss
-    return score / k_fold
+    # Return average losses
+    return avg_test_loss/k_fold, avg_train_loss/k_fold
