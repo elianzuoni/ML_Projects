@@ -16,7 +16,7 @@ def clean_data(x, null, drop_thresh):
     # Vector holding, for each feature, the fraction of datapoints with a null value
     null_frac = (1/x_clean.shape[0]) * np.sum(x_clean==null, axis=0)
     # Boolean vector holding, for each feature, whether or not it needs to be kept
-    column_to_keep = null_frac < drop_thresh
+    column_to_keep = null_frac <= drop_thresh
     
     # Drop bad columns
     x_clean = x_clean[:, column_to_keep]
