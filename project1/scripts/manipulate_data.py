@@ -31,7 +31,7 @@ def build_poly(x, degree):
     """polynomial basis functions for input data x, for j=0 up to j=degree."""
     N=x.shape[0]
     D=x.shape[1]
-    PHI = np.ones((N,D))
+    PHI = np.ones((N,1))
     for deg in range (1,degree+1) :
         PHI = np.c_[PHI, np.power(x, deg)] 
     return PHI
