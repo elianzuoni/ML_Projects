@@ -1,30 +1,33 @@
 """ File containing the entire workflow, from data loading to prediction generation. The training is done with the
 best (hyper)parameters found with model selection in project1.ipynb. """
 
-# Useful starting lines
-%matplotlib inline
+# Imports
 import numpy as np
 import matplotlib.pyplot as plt
-%load_ext autoreload
-%autoreload 2
-
-# Imports
 from proj1_helpers import *
 from toolbox.manipulate_data import *
 from toolbox.training import *
 
+# Set seed to ensure reproducibility
+seed = 1
+np.random.seed(seed)
+
 
 # Fixed parameters, not to be changes
-drop_thresholds = [0, 0.33, 0.7, 1] # There are only 4 levels of feature missingness
+null = -999 # The placeholder for missing values
+drop_thresholds = [0.1, 0.33, 0.7, 1] # There are only 4 levels of feature missingness
 class_thresh = 0.5 # The threshold for the regressor-based classifier
 
 # Best training parameters found with model selection in the notebook
 # Do not delete them to try different ones: comment them out (if new submission is worse, we still need the best parameters here)
-drop_thresh = drop_thresholds[1]
-degree = 1
+drop_thresh = drop_thresholds[3]
+# drop_thresh = drop_thresholds[1]
+degree =3
+# degree = 1
 # max_iters = 10000
 # batch_size = 2000
 # gamma = 1e-5
+lambda_ = 1e-5
 # lambda_ = 1
 # initial_w = np.zeros(tX.shape[1])
 
@@ -75,3 +78,4 @@ y_bil = bin_unil_to_bil(y_unil)
 # Write formatted output file
 OUTPUT_PATH = 'submission.csv'
 create_csv_submission(ids_ch, y_bil, OUTPUT_PATH)
+print("Output file created")

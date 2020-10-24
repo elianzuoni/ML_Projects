@@ -31,19 +31,23 @@ def compute_reg_ls_gradient(y, tx, w, lambda_=0):
 
 def sigmoid(t):
     """ Compute the sigmoid function, evaluated at point t. """
-    return np.exp(t) / (1+np.exp(t))
+    # Numerical stabilisation
+    return np.piecewise(t, [t > 0], [lambda x : 1/(1 + np.exp(-x)), lambda x : np.exp(x)/(1 + np.exp(x))])
 
 
 def compute_reg_logistic_loss(y, tx, w, lambda_):
     """ Compute the value of the L2-regularised logistic loss function (negative log-likelihood). """
     # Vectorised computation
     z = np.dot(tx, w)
-    loss = np.sum(np.log(1 + np.exp(z))) - np.dot(y.T, z)
+    #print("z =", z, "argmax z =", np.argmax(z), "max z =", np.max(z), "exp(z) =", np.exp(z), "ln(1+exp(z)) =", np.log(1+np.exp(z)), "max ln(1+exp(z)) =", np.max(np.log(1+np.exp(z))))
+    # Numerically stable implementation (division by N only to make SGD work)
+    loss =  1/(tx.shape[0]) * np.sum(np.log( np.exp(-y*z) + np.exp((1-y)*z) ))
+    #print("First loss =", loss)
     
     # Regularise, if necessary
     if lambda_ > 0:
         loss += lambda_ * np.dot(w.T, w)
-    #print("LogLoss. lambda_ =", lambda_, ", loss =", loss, ", w =", w)
+    #print("LogLoss. lambda_ =", lambda_, ", loss =", loss)
     return loss
 
 
@@ -51,7 +55,8 @@ def compute_reg_logistic_gradient(y, tx, w, lambda_):
     """ Compute the gradient of the L2-regularised logistic loss function, evaluated at point w. """
     diff = sigmoid(np.dot(tx, w)) - y
     
-    grad = np.dot(tx.T, diff)
+    # Division by N so that SGD works
+    grad = 1/(tx.shape[0]) * np.dot(tx.T, diff)
     if lambda_ > 0:
         grad += lambda_ * 2 * w
     #print("LogGrad. lambda_ =", lambda_, ", grad =", grad, ", w =", w)
@@ -76,6 +81,7 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma, lambda_, compute_loss, 
         # Update w, and the corresponding loss
         w = w - gamma * grad
         loss = compute_loss(y, tx, w, lambda_)
+        #print(loss)
 
     return w, loss
 
@@ -114,6 +120,7 @@ def stochastic_gradient_descent(y, tx, initial_w, max_iters, gamma, lambda_, bat
         # Update w, and the corresponding loss
         w = w - gamma * grad
         loss = compute_loss(y, tx, w, lambda_)
+        #print(loss)
         
         # Move to next batch
         n_batch += 1
