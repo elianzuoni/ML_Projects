@@ -16,7 +16,7 @@ GD and SGD are implemented in a generic way: concrete ML functions simply call t
 
 ### [training.py](scripts/toolbox/training.py) 
 This file contains training functions, adapting those in implementations.py, offering an intuitive and homogeneous interface.  
-The functions are named "train_(reg/unreg)_<cost>_<method>": the name specifies the cost function ("ls" for Least-Squares, "log" for Logistic), whether or not it is regularised, and the method used to optimise it (GD, SGD, or NE, for Normal Equations).  
+The functions are named "train_(reg/unreg)_\<cost\>_\<method\>": the name specifies the cost function ("ls" for Least-Squares, "log" for Logistic), whether or not it is regularised, and the method used to optimise it (GD, SGD, or NE, for Normal Equations).  
 These functions return (w, train_loss, regressor, classifier), where w is the optimal weight vector, train_loss is the loss on the training dataset, regressor is a function (parametrised by w) mapping datapoints to continuous predictions, and classifier is the function (parametrised by the regressor and a threshold) mapping datapoints to predictions in {0, 1}.
 
 ### [manipulate_data.py](scripts/toolbox/manipulate_data.py) 
