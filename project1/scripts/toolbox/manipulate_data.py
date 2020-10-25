@@ -1,5 +1,7 @@
 """
-This file contains functions useful to manipulate data.
+This file contains utility functions that manipulate the dataset.  
+2 functions act on the labels, to map them from {-1, +1} to {0, 1}, and viceversa.  
+4 functions act on the datapoints: one to clean it (i.e. rid it of null values), one to standardise it, one to expand its features, and one to split it, according to a given ratio, between a training and a testing dataset.
 """
 
 # -*- coding: utf-8 -*-

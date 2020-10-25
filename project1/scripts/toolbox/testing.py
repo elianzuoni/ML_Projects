@@ -1,5 +1,6 @@
 """
-This file contains functions useful for testing.
+This file contains functions useful for testing, either "manually" (i.e. by feeding a manually-trained predictor and a manually-extracted testing dataset to an assesser), or "automatically" (i.e. via cross validation, which does the splitting, the training, and the testing).  
+A different metric is used for the test loss than for the train loss (i.e. the one minimised by the training): for example, when the classifier is being assessed,it is the fraction of misclassified points, which more closely reflects the actual goodness of fit.  
 """
 
 # -*- coding: utf-8 -*-
@@ -16,7 +17,6 @@ def compute_mse(a, b):
 
 def compute_nhd(a, b):
     """ Returns the normalised Hamming distance between a and b (binary values). """
-    #print(a, "\n", b, "\n\n")
     return (1 / len(a)) * np.sum(np.where(a != b, 1, 0))
 
 

@@ -1,5 +1,4 @@
-""" File containing the entire workflow, from data loading to prediction generation. The training is done with the
-best (hyper)parameters found with model selection in project1.ipynb. """
+""" This file contains the entire workflow, from data loading to prediction generation. The training is done with the best (hyper)parameters found with model selection in project1.ipynb. """
 
 # Imports
 import numpy as np
@@ -13,22 +12,22 @@ seed = 1
 np.random.seed(seed)
 
 
-# Fixed parameters, not to be changes
+# Fixed parameters, not to be changed
 null = -999 # The placeholder for missing values
 drop_thresholds = [0.1, 0.33, 0.7, 1] # There are only 4 levels of feature missingness
 class_thresh = 0.5 # The threshold for the regressor-based classifier
 
 # Best training parameters found with model selection in the notebook
 # Do not delete them to try different ones: comment them out (if new submission is worse, we still need the best parameters here)
-drop_thresh = drop_thresholds[3]
-# drop_thresh = drop_thresholds[1]
-degree =3
-# degree = 1
+# drop_thresh = drop_thresholds[2]
+drop_thresh = drop_thresholds[2]
+# degree = 5
+degree = 10
 # max_iters = 10000
 # batch_size = 2000
 # gamma = 1e-5
-lambda_ = 1e-5
-# lambda_ = 1
+# lambda_ = 1e-4
+lambda_ = 1e-3
 # initial_w = np.zeros(tX.shape[1])
 
 
@@ -51,8 +50,8 @@ tX = expand_features(X, degree)
 
 # Train using the best method found with model selection in the notebook
 # As for parameters, comment this line out to try a different one
-w, train_loss, regressor, classifier = train_unreg_ls_NE(y, tX, class_thresh)
-# w, train_loss, regressor, classifier = def train_reg_log_SGD(y, tX, lambda_, initial_w, max_iters, batch_size, gamma, class_thresh)
+w, train_loss, regressor, classifier = train_reg_ls_NE(y, tX, lambda_, class_thresh)
+# w, train_loss, regressor, classifier = train_reg_ls_NE(y, tX, lambda_, class_thresh)
 
 
 # Load challenge data

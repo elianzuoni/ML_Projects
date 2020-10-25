@@ -1,8 +1,7 @@
 """
-This file contains training functions, adapting those in implementations.py, offering an intuitive and homogeneous interface.
-The functions are named train_(reg/unreg)_<cost>_<method>, and they return (w, train_loss, regressor, classifier), where w is the
-optimal weight vector, train_loss is the loss on the training dataset, regressor is the function (parametrised by w)
-mapping datapoints to continuous outputs, and classifier is the function mapping datapoints to {0, 1} 
+This file contains training functions, adapting those in implementations.py, offering an intuitive and homogeneous interface.  
+The functions are named "train_(reg/unreg)_<cost>_<method>": the name specifies the cost function ("ls" for Least-Squares, "log" for Logistic), whether or not it is regularised, and the method used to optimise it (GD, SGD, or NE, for Normal Equations).  
+These functions return (w, train_loss, regressor, classifier), where w is the optimal weight vector, train_loss is the loss on the training dataset, regressor is a function (parametrised by w) mapping datapoints to continuous predictions, and classifier is the function (parametrised by the regressor and a threshold) mapping datapoints to predictions in {0, 1}.
 """
 
 # -*- coding: utf-8 -*-
@@ -45,7 +44,7 @@ def train(learn_args, learn, get_regressor, threshold):
     return w, loss, regressor, classifier
 
 
-##### ACTUAL TRAINING FUNCTIONS: LEAST SQUARES
+##### CONCRETE TRAINING FUNCTIONS: LEAST SQUARES
 
 
 def train_reg_ls_GD(y, tx, lambda_, initial_w, max_iters, gamma, threshold):
@@ -84,28 +83,28 @@ def train_unreg_ls_NE(y, tx, threshold):
     return train(learn_args, least_squares, get_linear_regressor, threshold)
 
 
-##### ACTUAL TRAINING FUNCTIONS: LOGISTIC
+##### CONCRETE TRAINING FUNCTIONS: LOGISTIC
 
 
 def train_reg_log_GD(y, tx, lambda_, initial_w, max_iters, gamma, threshold):
-    """ Training for L2-regularised Logistic loss with Gradient Descent """
-    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma)
+    """ Training for L2-regularised (and normalised) Logistic loss with Gradient Descent """
+    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma, True)
     return train(learn_args, reg_logistic_regression, get_linear_regressor, threshold)
 
 
 def train_reg_log_SGD(y, tx, lambda_, initial_w, max_iters, batch_size, gamma, threshold):
-    """ Training for L2-regularised Logistic loss with Stochastic Gradient Descent """
-    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma, batch_size)
+    """ Training for L2-regularised (and normalised) Logistic loss with Stochastic Gradient Descent """
+    learn_args = (y, tx, lambda_, initial_w, max_iters, gamma, batch_size, True)
     return train(learn_args, reg_logistic_regression_SGD, get_linear_regressor, threshold)
 
 
 def train_unreg_log_GD(y, tx, initial_w, max_iters, gamma, threshold):
-    """ Training for unregularised Logistic loss with Gradient Descent """
-    learn_args = (y, tx, initial_w, max_iters, gamma)
+    """ Training for unregularised (and normalised) Logistic loss with Gradient Descent """
+    learn_args = (y, tx, initial_w, max_iters, gamma, True)
     return train(learn_args, logistic_regression, get_linear_regressor, threshold)
 
 
 def train_unreg_log_SGD(y, tx, initial_w, max_iters, batch_size, gamma, threshold):
-    """ Training for unregularised Logistic loss with Stochastic Gradient Descent """
-    learn_args = (y, tx, initial_w, max_iters, gamma, batch_size)
+    """ Training for unregularised (and normalised) Logistic loss with Stochastic Gradient Descent """
+    learn_args = (y, tx, initial_w, max_iters, gamma, batch_size, True)
     return train(learn_args, logistic_regression_SGD, get_linear_regressor, threshold)
